@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --color-panel: oklch(0.99 0.003 260);
+  --color-panel-elevated: oklch(0.975 0.008 260);
+  --color-border: oklch(0.88 0.02 260);
+  --color-accent: oklch(0.48 0.14 200);
+  --color-accent-dim: oklch(0.42 0.12 200);
+  --color-warn: oklch(0.55 0.14 75);
+  --color-danger: oklch(0.5 0.2 25);
+  --color-success: oklch(0.45 0.14 155);
+}
+
+html {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: #ffffff;
+  color: oklch(0.25 0.02 260);
+  font-family: var(--font-sans);
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+/* TopBar: thin horizontal scrollbar when metrics overflow */
+.topbar-metrics-scroll::-webkit-scrollbar {
+  height: 5px;
+}
+.topbar-metrics-scroll::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: oklch(0.82 0.02 260);
+}
+.topbar-metrics-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* subtle scanline for camera tiles */
+.scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    oklch(0 0 0 / 0.04) 2px,
+    oklch(0 0 0 / 0.04) 4px
+  );
+  pointer-events: none;
+}
