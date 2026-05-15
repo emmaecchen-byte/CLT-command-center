@@ -1,9 +1,10 @@
-import { AlertTriangle, CircleDot, Languages, Video } from 'lucide-react'
+import { AlertTriangle, CircleDot, Languages, Menu, Video } from 'lucide-react'
 import { plantMetrics } from '../../data/mock'
 import type { PlantStatus } from '../../types'
 import { useAuth } from '../../auth/useAuth'
 import { roleTitle } from '../../auth/permissions'
 import { useLanguage, type Language } from '../../i18n/LanguageContext'
+import { useLayoutNav } from './LayoutNavContext'
 
 function statusPill(status: PlantStatus) {
   const map = {
@@ -39,19 +40,33 @@ const metricLabelClass = (language: Language) =>
 export function TopBar() {
   const { user } = useAuth()
   const { language, toggleLanguage } = useLanguage()
+  const { clickedOpen, hoverOpen, toggleClicked } = useLayoutNav()
   const { status, activeAlarms, camerasOnline, camerasTotal } = plantMetrics
+  const navOpen = clickedOpen || hoverOpen
   const metricsAria =
     language === 'zh' ? '工厂概览：状态、警报与摄像头' : 'Plant summary metrics'
   return (
     <header
       lang={language === 'zh' ? 'zh-CN' : 'en'}
-      className="flex min-h-14 shrink-0 flex-col gap-2 border-b border-[var(--color-border)] bg-[var(--color-panel)] py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-4 sm:py-2 lg:px-6"
+      className="flex min-h-14 shrink-0 flex-col gap-2 border-b border-[var(--color-border)] bg-[var(--color-panel)] py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-3 sm:py-2 lg:px-6"
     >
-      <div
-        className="topbar-metrics-scroll flex min-h-0 min-w-0 flex-1 flex-nowrap items-center gap-0 overflow-x-auto overflow-y-hidden overscroll-x-contain px-4 [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] sm:min-h-0 sm:px-0 sm:pr-1"
-        role="region"
-        aria-label={metricsAria}
-      >
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-row items-center gap-2 px-3 sm:px-0">
+          <button
+            type="button"
+            onClick={toggleClicked}
+            aria-expanded={navOpen}
+            aria-controls="app-sidebar"
+            className="shrink-0 rounded-lg p-2 text-slate-600 ring-1 ring-slate-200/80 transition hover:bg-slate-100 hover:text-slate-900 lg:hidden"
+            title="Menu"
+          >
+            <Menu className="size-5" aria-hidden />
+          </button>
+          <div
+            className="topbar-metrics-scroll flex min-h-0 min-w-0 flex-1 flex-nowrap items-center gap-0 overflow-x-auto overflow-y-hidden overscroll-x-contain [-webkit-overflow-scrolling:touch] [scrollbar-width:thin] sm:min-h-0 sm:pr-1"
+            role="region"
+            aria-label={metricsAria}
+          >
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <span className={metricLabelClass(language)}>
             Plant status
@@ -86,7 +101,9 @@ export function TopBar() {
           </span>
         </div>
       </div>
-      <div className="shrink-0 border-t border-[var(--color-border)] px-4 py-1 text-right sm:border-t-0 sm:border-l sm:border-[var(--color-border)] sm:py-0 sm:pl-4 lg:pl-6">
+      </div>
+      </div>
+      <div className="shrink-0 border-t border-[var(--color-border)] px-3 py-1 text-right sm:border-t-0 sm:border-l sm:border-[var(--color-border)] sm:py-0 sm:pl-4 lg:pl-6">
         <div className="flex items-center justify-end gap-3">
           <div>
             {user && (

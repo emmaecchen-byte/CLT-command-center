@@ -18,6 +18,7 @@ import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../auth/useAuth'
 import { canAccessPath, roleTitle } from '../../auth/permissions'
 import type { UserRole } from '../../auth/types'
+import { useLayoutNav } from './LayoutNavContext'
 
 const linkBase =
   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors'
@@ -85,6 +86,7 @@ const stationLinks: { to: string; label: string; icon: LucideIcon }[] = [
 
 export function Sidebar() {
   const { user, logout } = useAuth()
+  const { closeNav } = useLayoutNav()
   if (!user) return null
 
   const filter = (items: NavDef[]) =>
@@ -93,7 +95,7 @@ export function Sidebar() {
   const showStations = canAccessPath(user.role, '/station/st-a1')
 
   return (
-    <aside className="flex w-56 shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-panel)]">
+    <div className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-[var(--color-panel)]">
       <div className="border-b border-[var(--color-border)] px-4 py-4">
         <div className="flex items-center gap-2 text-[var(--color-accent)]">
           <Activity className="size-5" aria-hidden />
@@ -118,6 +120,7 @@ export function Sidebar() {
           <NavLink
             key={to}
             to={to}
+            onClick={() => closeNav()}
             className={({ isActive }) =>
               clsx(
                 linkBase,
@@ -139,6 +142,7 @@ export function Sidebar() {
           <NavLink
             key={to}
             to={to}
+            onClick={() => closeNav()}
             className={({ isActive }) =>
               clsx(
                 linkBase,
@@ -162,6 +166,7 @@ export function Sidebar() {
               <NavLink
                 key={to}
                 to={to}
+                onClick={() => closeNav()}
                 className={({ isActive }) =>
                   clsx(
                     linkBase,
@@ -187,6 +192,7 @@ export function Sidebar() {
               <NavLink
                 key={to}
                 to={to}
+                onClick={() => closeNav()}
                 className={({ isActive }) =>
                   clsx(
                     linkBase,
@@ -206,13 +212,16 @@ export function Sidebar() {
       <div className="border-t border-[var(--color-border)] p-3">
         <button
           type="button"
-          onClick={() => logout()}
+          onClick={() => {
+            closeNav()
+            logout()
+          }}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-800"
         >
           <LogOut className="size-4" aria-hidden />
           Sign out
         </button>
       </div>
-    </aside>
+    </div>
   )
 }
